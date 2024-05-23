@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Database Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Database Management System</h1>
+      <div>
+        <h2>Servers</h2>
+        <ul>
+          <li v-for="server in servers" :key="server.id">{{ server.name }}</li>
+        </ul>
+        <button @click="fetchServers">Fetch Servers</button>
+      </div>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          servers: [],
+        },
+        methods: {
+          fetchServers() {
+            axios
+              .get("http://localhost:5000/api/servers")
+              .then((response) => {
+                this.servers = response.data;
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

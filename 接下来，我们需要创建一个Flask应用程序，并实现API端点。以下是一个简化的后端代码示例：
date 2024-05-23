@@ -1,0 +1,37 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+# 模拟数据库
+servers = [
+    {'id': 1, 'name': 'Server 1', 'ip': '192.168.1.101'},
+    {'id': 2, 'name': 'Server 2', 'ip': '192.168.1.102'}
+]
+
+@app.route('/api/servers', methods=['GET'])
+def get_servers():
+    return jsonify(servers)
+
+@app.route('/api/servers', methods=['POST'])
+def add_server():
+    new_server = request.json
+    servers.append(new_server)
+    return jsonify(new_server), 201
+
+@app.route('/api/servers/<int:server_id>', methods=['DELETE'])
+def delete_server(server_id):
+    global servers
+    servers = [server for server in servers if server['id'] != server_id]
+    return '', 204
+
+@app.route('/api/servers/<int:server_id>', methods=['PUT'])
+def update_server(server_id):
+    updated_server = request.json
+    for server in servers:
+        if server['id'] == server_id:
+            server.update(updated_server)
+            return jsonify(server)
+    return '', 404
+
+if __name__ == '__main__':
+    app.run(debug=True)
